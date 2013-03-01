@@ -1,0 +1,89 @@
+
+   Patch to Disable Clear-Channel-Assessment
+   -----------------------------------------
+
+
+INTRODUCTION:
+-------------
+
+This software consists of a set of changes to the MadWifi driver which
+disable clear-channel assessment and other backoff mechanisms in
+Atheros 5212 and 5213-based wireless cards.  It is based in large part
+on the "txcont" regulatory testing functionality.  The actions
+performed to disable backoff can be grouped as:
+
+0. Disable carrier sense and "virtual carrier sense" (NAV)
+   functionality.  This includes abusing the gain control registers,
+   so successful packet reception is unlikely.
+
+1. Set the DFS control unit (DCU) to backoff or wait as little as
+   possible.
+
+2. For each queue, configure to send as many frames as possible in a
+   burst, and do not do post-frame backoff.
+
+USAGE:
+------
+
+CCA suppression is controlled with the "dev.wifiX.disable_cca"
+sysctl. A value of 0 means "do not perform any CCA suppression."
+Non-zero values are interpreted as a bit-mask: Bits 0, 1 and 2 each
+enable the function groups described above.  Bit 3 disables interrupts
+for beacons and missed beacons.  This is largely unrelated
+functionality; if you don't know why you want it, then you don't.  The
+mask is stored as seven bits, but only the bottom four are
+significant.
+
+
+MISC:
+-----
+
+The most recent version of this software, along with related
+information and tools, can be found at the following URL:
+http://systems.cs.colorado.edu/mediawiki/index.php?title=Downloads 
+
+If you use this software in your research, please cite it as:
+
+@TechReport{Anderson2008Commodity,
+  author = 	 {Eric Anderson and Gary Yee and Caleb Phillips and
+                  Douglas Sicker and Dirk Grunwald},
+  title = 	 {Commodity AR52XX-Based Wireless Adapters as a Research Platform},
+  institution =  {University of Colorado at Boulder},
+  year = 	 {2008},
+  month =	 {April},
+  type =	 {Technical Report},
+  number =	 {CU-CS-XXXX-08},
+  address =	 {Department of Computer Science, Campus Box 430},
+}
+
+
+COPYRIGHT:
+----------
+
+This patch and accompanying text are Copyright (c) 2008, Regents of
+the University of Colorado.  All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+    * Neither the name of the University of Colorado nor the names of its
+      contributors may be used to endorse or promote products derived from
+      this software without specific prior written permission.  
+
+THIS SOFTWARE IS PROVIDED BY THE UNIVERSITY OF COLORADO ``AS IS'' AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE UNIVERSITY OF COLORADO BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
